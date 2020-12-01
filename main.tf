@@ -12,7 +12,7 @@ provider "aws" {
   region  = var.region
 }
 
-module "example" {
-  source = "./example"
-  ami = var.ami
+module "cognito" {
+  source = "./cognito"
+  facebook_appid = var.facebook_appid
 }
