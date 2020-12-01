@@ -62,6 +62,6 @@ resource "aws_cognito_identity_pool_roles_attachment" "main_pool_role_attachment
   identity_pool_id = aws_cognito_identity_pool.main_pool.id
 
   roles = {
-    "authenticated" = aws_iam_role.authenticated.arn
+    "authenticated" = aws_iam_role.authenticated_role.arn
   }
 }
