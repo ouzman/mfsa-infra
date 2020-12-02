@@ -19,5 +19,5 @@ module "cognito" {
 
 module "example-lambda" {
   source = "./example-lambda"
-  bucket_name = var.bucket_name
+  lambda_bucket = var.lambda_bucket
 }
