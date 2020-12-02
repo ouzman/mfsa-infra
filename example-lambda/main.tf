@@ -24,12 +24,12 @@ resource "aws_iam_role" "lambda_exec" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": ""
+      "Sid": "",
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Principal": {
         "Service": "lambda.amazonaws.com"
-      },
+      }
     }
   ]
 }
