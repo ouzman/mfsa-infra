@@ -17,7 +17,7 @@ module "cognito" {
   facebook_appid = var.facebook_appid
 }
 
-module "lambda-example" {
-  source = "./lambda-example"
+module "example-lambda" {
+  source = "./example-lambda"
   bucket_name = var.bucket_name
 }
