@@ -22,7 +22,7 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   user_pool_id                  = aws_cognito_user_pool.main_user_pool.id
   generate_secret               = true
   explicit_auth_flows           = [ "ADMIN_NO_SRP_AUTH" ]
-  supported_identity_providers  = [ "facebook" ]
+  supported_identity_providers  = [ "Facebook" ]
   logout_urls                   = [ "mfsaios://" ]
   callback_urls                 = [ "mfsaios://" ]
   default_redirect_uri          = "mfsaios://"
@@ -40,7 +40,7 @@ resource "aws_cognito_user_pool_domain" "main" {
 
 resource "aws_cognito_identity_provider" "facebook_provider" {
   user_pool_id  = aws_cognito_user_pool.main_user_pool.id
-  provider_name = "facebook"
+  provider_name = "Facebook"
   provider_type = "Facebook"
 
   provider_details = {
