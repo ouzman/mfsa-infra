@@ -21,7 +21,7 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   name                          = "mfsa-ios-client"
   user_pool_id                  = aws_cognito_user_pool.main_user_pool.id
   generate_secret               = true
-  allowed_oauth_scopes          = [ "code", "implicit" ]
+  allowed_oauth_flows          = [ "code", "implicit" ]
   explicit_auth_flows           = [ "ADMIN_NO_SRP_AUTH" ]
   supported_identity_providers  = [ "Facebook" ]
   logout_urls                   = [ "mfsaios://" ]
