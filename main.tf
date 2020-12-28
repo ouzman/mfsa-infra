@@ -15,8 +15,8 @@ provider "aws" {
 module "cognito-user-pool" {
   source = "./cognito-user-pool"
   facebook = {
-    client_id = var.facebook.client_id
-    client_secret = var.facebook.client_secret
+    client_id = var.facebook_client_id
+    client_secret = var.facebook_client_secret
   }
 }
 
