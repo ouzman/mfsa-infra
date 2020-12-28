@@ -24,3 +24,7 @@ module "example-lambda" {
   source = "./example-lambda"
   lambda_bucket = var.lambda_bucket
 }
+
+output "test" {
+  value = "testvalue"
+}
