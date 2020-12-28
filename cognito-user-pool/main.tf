@@ -3,18 +3,15 @@ resource "aws_cognito_user_pool" "main_user_pool" {
   alias_attributes          = [ "email" ]
   auto_verified_attributes  = [ "email" ]
   mfa_configuration         = "OFF"
-  
   account_recovery_setting {
     recovery_mechanism {
       name     = "admin_only"
       priority = 1
     }
   }
-  
   username_configuration {
     case_sensitive  = false
   }
-  
   admin_create_user_config {
     allow_admin_create_user_only  = true
   }
@@ -43,7 +40,7 @@ resource "aws_cognito_user_pool_domain" "main" {
 
 resource "aws_cognito_identity_provider" "facebook_provider" {
   user_pool_id  = aws_cognito_user_pool.main_user_pool.id
-  provider_name = "Facebook"
+  provider_name = "facebook"
   provider_type = "Facebook"
 
   provider_details = {
