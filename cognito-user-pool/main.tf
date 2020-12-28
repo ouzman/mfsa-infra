@@ -43,7 +43,7 @@ resource "aws_cognito_user_pool_domain" "main" {
 
 resource "aws_cognito_identity_provider" "facebook_provider" {
   user_pool_id  = aws_cognito_user_pool.main_user_pool.id
-  provider_name = "facebook"
+  provider_name = "Facebook"
   provider_type = "Facebook"
 
   provider_details = {
