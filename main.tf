@@ -12,9 +12,12 @@ provider "aws" {
   region  = var.region
 }
 
-module "cognito" {
-  source = "./cognito"
-  facebook_appid = var.facebook_appid
+module "cognito-user-pool" {
+  source = "./cognito-user-pool"
+  facebook {
+    client_id = var.facebook.client_id
+    client_secret = var.facebook.client_secret
+  }
 }
 
 module "example-lambda" {
