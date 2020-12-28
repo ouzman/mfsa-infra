@@ -54,6 +54,6 @@ resource "aws_cognito_identity_provider" "facebook_provider" {
 
   attribute_mapping = {
     email    = "email"
-    username = "sub"
+    username = "id"
   }
 }
