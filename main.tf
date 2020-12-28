@@ -12,7 +12,7 @@ provider "aws" {
   region  = var.region
 }
 
-module "cognito-user-pool" {
+module "cognito_user_pool" {
   source = "./cognito-user-pool"
   facebook = {
     client_id = var.facebook_client_id
@@ -20,11 +20,7 @@ module "cognito-user-pool" {
   }
 }
 
-module "example-lambda" {
+module "example_lambda" {
   source = "./example-lambda"
   lambda_bucket = var.lambda_bucket
-}
-
-output "test" {
-  value = "testvalue"
 }

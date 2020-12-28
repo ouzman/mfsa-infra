@@ -31,10 +31,6 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   allowed_oauth_scopes                  = [ "email", "openid" ]
 }
 
-output "ios-client-secret" {
-  value = aws_cognito_user_pool_client.ios_client.client_secret
-}
-
 resource "aws_cognito_user_pool_domain" "main" {
   domain       = "mfsa-user"
   user_pool_id = aws_cognito_user_pool.main_user_pool.id
