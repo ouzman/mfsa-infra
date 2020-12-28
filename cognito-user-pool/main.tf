@@ -1,18 +1,18 @@
 resource "aws_cognito_user_pool" "main_user_pool" {
   name                      = "mfsa_main_user_pool"
-  alias_attributes          = "email"
+  alias_attributes          = [ "email" ]
   auto_verified_attributes  = [ "email" ]
   mfa_configuration         = "OFF"
-  account_recovery_setting {
-    recovery_mechanism {
+  account_recovery_setting = {
+    recovery_mechanism = {
       name      = "admin_only"
       priority  = 1
     }
   }
-  username_configuration {
+  username_configuration = {
     case_sensitive  = false
   }
-  admin_create_user_config {
+  admin_create_user_config = {
     allow_admin_create_user_only  = true
   }
 }
