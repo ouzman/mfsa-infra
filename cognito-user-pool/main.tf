@@ -18,15 +18,15 @@ resource "aws_cognito_user_pool" "main_user_pool" {
 }
 
 resource "aws_cognito_user_pool_client" "ios_client" {
-  name              = "mfsa-ios-client"
-  user_pool_id      = aws_cognito_user_pool.main_user_pool.id
-  generate_secret   = true
-  explicit_auth_flows = ["ADMIN_NO_SRP_AUTH"]
-  supported_identity_providers = { "facebook" }
-  logout_urls = { "mfsaios://" }
-  callback_urls = { "mfsaios://" }
-  default_redirect_uri = "mfsaios://"
-  allowed_oauth_scopes = { "email", "openid" }
+  name                          = "mfsa-ios-client"
+  user_pool_id                  = aws_cognito_user_pool.main_user_pool.id
+  generate_secret               = true
+  explicit_auth_flows           = [ "ADMIN_NO_SRP_AUTH" ]
+  supported_identity_providers  = [ "facebook" ]
+  logout_urls                   = [ "mfsaios://" ]
+  callback_urls                 = [ "mfsaios://" ]
+  default_redirect_uri          = "mfsaios://"
+  allowed_oauth_scopes          = [ "email", "openid" ]
 }
 
 output "ios-client-secret" {
