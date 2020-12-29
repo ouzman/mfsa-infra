@@ -29,9 +29,11 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   callback_urls                         = [ "mfsaios://" ]
   default_redirect_uri                  = "mfsaios://"
   allowed_oauth_scopes                  = [ "email", "openid" ]
+
+  depends_on = [ aws_cognito_identity_provider.facebook_provider ]
 }
 
-resource "aws_cognito_user_pool_domain" "main" {
+resource "aws_cognito_user_pool_domain" "pool-domain" {
   domain       = "mfsa-user"
   user_pool_id = aws_cognito_user_pool.user_pool.id
 }
