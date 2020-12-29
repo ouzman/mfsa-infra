@@ -7,7 +7,7 @@ resource "aws_cognito_identity_pool" "identity_pool" {
     iterator = "client_id"
     content {
       client_id = client_id
-      provider_name = var.cognito_user_pool_id
+      provider_name = var.cognito_user_pool_provider_name
       server_side_token_check = true
     }
   }
