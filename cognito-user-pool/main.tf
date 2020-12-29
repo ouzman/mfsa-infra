@@ -22,7 +22,7 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   user_pool_id                          = aws_cognito_user_pool.user_pool.id
   generate_secret                       = true
   allowed_oauth_flows_user_pool_client  = true
-  allowed_oauth_flows                   = [ "code", "implicit" ]
+  allowed_oauth_flows                   = [ "code" ]
   explicit_auth_flows                   = [ "ADMIN_NO_SRP_AUTH" ]
   supported_identity_providers          = [ "Facebook" ]
   logout_urls                           = [ "mfsaios://" ]
