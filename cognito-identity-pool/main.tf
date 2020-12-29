@@ -49,15 +49,18 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Action": ["s3:ListBucket"],
       "Effect": "Allow",
+      "Resource": ["${var.s3_files_bucket_arn}"],
+      "Condition": {"StringLike": {"s3:prefix": ["$${cognito-identity.amazonaws.com:sub}/*"]}}
+    },
+    {
       "Action": [
-        "mobileanalytics:PutEvents",
-        "cognito-sync:*",
-        "cognito-identity:*"
+        "s3:GetObject",
+        "s3:PutObject"
       ],
-      "Resource": [
-        "*"
-      ]
+      "Effect": "Allow",
+      "Resource": ["${var.s3_files_bucket_arn}/$${cognito-identity.amazonaws.com:sub}/*"]
     }
   ]
 }
