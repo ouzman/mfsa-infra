@@ -19,7 +19,7 @@ resource "aws_cognito_user_pool" "user_pool" {
 
 resource "aws_cognito_user_pool_client" "ios_client" {
   name                                  = "mfsa-ios-client"
-  user_pool_id                          = aws_cognito_user_pool.main_user_pool.id
+  user_pool_id                          = aws_cognito_user_pool.user_pool.id
   generate_secret                       = true
   allowed_oauth_flows_user_pool_client  = true
   allowed_oauth_flows                   = [ "code", "implicit" ]
