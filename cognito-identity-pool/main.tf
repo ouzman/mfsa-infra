@@ -49,6 +49,15 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Effect": "Allow",
+      "Action": [
+        "cognito-identity:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
       "Action": ["s3:ListBucket"],
       "Effect": "Allow",
       "Resource": ["${var.s3_files_bucket_arn}"],
