@@ -28,7 +28,6 @@ module "cognito_identity_pool" {
   source = "./cognito-identity-pool"
   cognito_user_pool_provider_name = module.cognito_user_pool.user_pool_endpoint
   cognito_user_pool_client_ids = [ module.cognito_user_pool.ios_client_id ]
-  cognito_user_pool_id = module.cognito_user_pool.user_pool_id
   s3_files_bucket_arn = module.s3.files_bucket_arn
 }
 
