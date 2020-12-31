@@ -61,7 +61,7 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
       "Action": ["s3:ListBucket"],
       "Effect": "Allow",
       "Resource": ["${var.s3_files_bucket_arn}"],
-      "Condition": {"StringLike": {"s3:prefix": ["$${cognito-identity.amazonaws.com:sub}/*"]}}
+      "Condition": {"StringLike": {"s3:prefix": ["protected/$${cognito-identity.amazonaws.com:sub}/*"]}}
     },
     {
       "Action": [
@@ -69,7 +69,7 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
         "s3:PutObject"
       ],
       "Effect": "Allow",
-      "Resource": ["${var.s3_files_bucket_arn}/$${cognito-identity.amazonaws.com:sub}/*"]
+      "Resource": ["${var.s3_files_bucket_arn}/protected/$${cognito-identity.amazonaws.com:sub}/*"]
     }
   ]
 }
