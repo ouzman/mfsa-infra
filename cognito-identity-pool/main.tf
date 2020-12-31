@@ -66,7 +66,8 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
     {
       "Action": [
         "s3:GetObject",
-        "s3:PutObject"
+        "s3:PutObject",
+        "s3:DeleteObject"
       ],
       "Effect": "Allow",
       "Resource": ["${var.s3_files_bucket_arn}/protected/$${cognito-identity.amazonaws.com:sub}/*"]
