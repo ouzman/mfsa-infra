@@ -2,6 +2,8 @@ const AWS = require('aws-sdk');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
+const TABLE_NAME = 'mfsa-share'
+
 exports.handler = async (event, context) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
@@ -13,18 +15,24 @@ exports.handler = async (event, context) => {
 
     try {
         switch (event.httpMethod) {
-            case 'DELETE':
-                body = await dynamo.delete(JSON.parse(event.body)).promise();
-                break;
             case 'GET':
-                // body = await dynamo.get({ TableName: event.queryStringParameters.TableName, Key: { "resourceId": "aa" } }).promise();
-                body = await dynamo.scan({ TableName: "mfsa-share", Key: { "ResourceId": event.pathParameters.proxy } }).promise();
-                break;
-            case 'POST':
-                body = await dynamo.put(JSON.parse(event.body)).promise();
+                const params = {
+                    TableName: TABLE_NAME,
+                    Key: { ResourceId : event.pathParameters.resource },
+                };
+                body = await dynamo.get(params).promise();
                 break;
             case 'PUT':
-                body = await dynamo.update(JSON.parse(event.body)).promise();
+                const params = {
+                    TableName: TABLE_NAME,
+                    Key: { HashKey : 'ResourceId' },
+                    UpdateExpression: 'ADD IdentityIds :identityId',
+                    ExpressionAttributeValues: {
+                        ':identityId' : [event.body],
+                    },
+                };
+
+                body = await dynamo.update(params).promise();
                 break;
             default:
                 throw new Error(`Unsupported method "${event.httpMethod}"`);
