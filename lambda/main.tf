@@ -50,7 +50,7 @@ resource "aws_lambda_function" "share_lambda" {
   role          = aws_iam_role.share_lambda_role.arn
   handler       = "exports.handler"
   
-  filename      = "files/share-lambda.zip"
+  filename      = "${path.module}/files/share-lambda.zip"
   source_code_hash = data.archive_file.share_lambda_archive.output_base64sha256
 
   runtime = "nodejs12.x"
