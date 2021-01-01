@@ -24,9 +24,9 @@ exports.handler = async (event, context) => {
             case 'PUT':
                 body = await dynamo.update({
                     TableName: TABLE_NAME,
-                    Key: { HashKey: 'ResourceId' },
+                    Key: { ResourceId: event.pathParameters.resource },
                     UpdateExpression: 'ADD IdentityIds :identityId',
-                    ExpressionAttributeValues: { ':identityId': [event.body] },
+                    ExpressionAttributeValues: { ':identityId': dynamo.createSet([event.body]) },
                 }).promise();
                 break;
             default:
