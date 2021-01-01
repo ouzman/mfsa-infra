@@ -20,7 +20,7 @@ resource "aws_iam_role" "share_lambda_role" {
                 "dynamodb:GetItem",
                 "dynamodb:UpdateItem"
             ],
-            "Resource": "${var.dynamodb_share_table_arn}"
+            "Resource": ["${var.dynamodb_share_table_arn}]"
         }
     ]
 }
