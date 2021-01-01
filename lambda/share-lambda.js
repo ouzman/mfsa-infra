@@ -16,23 +16,18 @@ exports.handler = async (event, context) => {
     try {
         switch (event.httpMethod) {
             case 'GET':
-                const params = {
+                body = await dynamo.get({
                     TableName: TABLE_NAME,
-                    Key: { ResourceId : event.pathParameters.resource },
-                };
-                body = await dynamo.get(params).promise();
+                    Key: { ResourceId: event.pathParameters.resource },
+                }).promise();
                 break;
             case 'PUT':
-                const params = {
+                body = await dynamo.update({
                     TableName: TABLE_NAME,
-                    Key: { HashKey : 'ResourceId' },
+                    Key: { HashKey: 'ResourceId' },
                     UpdateExpression: 'ADD IdentityIds :identityId',
-                    ExpressionAttributeValues: {
-                        ':identityId' : [event.body],
-                    },
-                };
-
-                body = await dynamo.update(params).promise();
+                    ExpressionAttributeValues: { ':identityId': [event.body] },
+                }).promise();
                 break;
             default:
                 throw new Error(`Unsupported method "${event.httpMethod}"`);
