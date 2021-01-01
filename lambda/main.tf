@@ -24,7 +24,7 @@ resource "aws_iam_role" "share_lambda_role" {
 EOF
 }
 
-resource "aws_iam_policy" "share_lambda_dynamodb_policy" {
+resource "aws_iam_role_policy" "share_lambda_dynamodb_policy" {
   name        = "dynamodb"
   role        =  aws_iam_role.share_lambda_role.id
   policy = <<EOF
