@@ -24,13 +24,29 @@ resource "aws_iam_role" "share_lambda_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "share_lambda_dynamodb_policy" {
-  name        = "dynamodb"
+resource "aws_iam_role_policy" "share_lambda_policy" {
+  name        = "mfsa_share_lambda_policy"
   role        =  aws_iam_role.share_lambda_role.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
+    {
+      "Action": [
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem",
+          "logs:CreateLogStream",
+          "logs:CreateLogGroup",
+          "logs:PutLogEvents"
+      ],
+      "Resource": [
+          "arn:aws:dynamodb:eu-west-1:315952967095:table/mfsa-share"
+          "arn:aws:logs:*:*:*",
+      ]
+      "Effect": "Allow"
+    },
     {
       "Action": [
         "logs:CreateLogGroup",
