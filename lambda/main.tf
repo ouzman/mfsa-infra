@@ -70,4 +70,10 @@ resource "aws_lambda_function" "share_lambda" {
   source_code_hash = data.archive_file.share_lambda_archive.output_base64sha256
 
   runtime = "nodejs12.x"
+  
+  environment {
+    variables = {
+      USER_POOL_ID = var.cognito_user_pool_id
+    }
+  }
 }

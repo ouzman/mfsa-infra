@@ -44,7 +44,8 @@ module "dynamodb" {
 
 module "lambda" {
   source = "./lambda"
-  dynamodb_share_table_arn = module.dynamodb.share_table_arn 
+  dynamodb_share_table_arn = module.dynamodb.share_table_arn
+  cognito_user_pool_id = module.cognito_user_pool.user_pool_id
 }
 
 module "api_gateway" {

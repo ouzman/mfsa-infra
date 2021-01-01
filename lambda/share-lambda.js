@@ -1,8 +1,26 @@
 const AWS = require('aws-sdk');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
 const TABLE_NAME = 'mfsa-share'
+
+const listCognitoUsers = () => {
+    const params = {
+      UserPoolId: process.env.USER_POOL_ID,
+      AttributesToGet: ["sub"]
+    };
+  
+    cognitoIdentityServiceProvider.listUsers(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack);
+        callback(err)        // here is the error return
+      } else {
+        console.log(data);
+        callback(null, data) // here is the success return
+      }
+    });
+}
 
 exports.handler = async (event, context) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
