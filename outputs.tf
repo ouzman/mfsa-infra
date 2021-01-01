@@ -12,3 +12,7 @@ output "cognito_user_pool_endpoint" {
     value       = module.cognito_user_pool.user_pool_endpoint
     sensitive   = false
 }
+
+output "api_gateway_base_url" {
+    value = module.api_gateway.base_url
+}

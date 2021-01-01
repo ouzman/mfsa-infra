@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
                 break;
             case 'GET':
                 // body = await dynamo.get({ TableName: event.queryStringParameters.TableName, Key: { "resourceId": "aa" } }).promise();
-                body = await dynamo.scan({ TableName: event.queryStringParameters.TableName }).promise();
+                body = await dynamo.scan({ TableName: "mfsa-share", Key: { "ResourceId": event.pathParameters.proxy } }).promise();
                 break;
             case 'POST':
                 body = await dynamo.put(JSON.parse(event.body)).promise();
