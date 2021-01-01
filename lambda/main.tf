@@ -42,9 +42,9 @@ resource "aws_iam_role_policy" "share_lambda_policy" {
           "logs:PutLogEvents"
       ],
       "Resource": [
-          "arn:aws:dynamodb:eu-west-1:315952967095:table/mfsa-share"
-          "arn:aws:logs:*:*:*",
-      ]
+          "arn:aws:dynamodb:eu-west-1:315952967095:table/mfsa-share",
+          "arn:aws:logs:*:*:*"
+      ],
       "Effect": "Allow"
     },
     {
