@@ -45,11 +45,6 @@ resource "aws_iam_policy" "share_lambda_dynamodb_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.lambda_logging.arn
-}
-
 resource "aws_lambda_function" "share_lambda" {
   function_name = "mfsa-share"
   role          = aws_iam_role.share_lambda_role.arn
