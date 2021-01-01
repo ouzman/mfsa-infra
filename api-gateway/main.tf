@@ -37,7 +37,7 @@ resource "aws_api_gateway_integration" "share_lambda_integration" {
   resource_id = aws_api_gateway_method.share_api_proxy.resource_id
   http_method = aws_api_gateway_method.share_api_proxy.http_method
 
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = var.lambda_share_lambda_invoke_arn
 }
@@ -59,7 +59,7 @@ resource "aws_api_gateway_integration" "share_lambda_root" {
   resource_id = aws_api_gateway_method.share_api_proxy_root.resource_id
   http_method = aws_api_gateway_method.share_api_proxy_root.http_method
 
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = var.lambda_share_lambda_invoke_arn
 }
