@@ -7,10 +7,16 @@ terraform {
   }
 }
 
+locals {
+  cognito_user_pool_name = "mfsa-user-pool"
+}
+
 provider "aws" {
   profile = "default"
   region  = var.region
 }
+
+provider "archive" {}
 
 module "s3" {
   source = "./s3"
@@ -22,6 +28,7 @@ module "cognito_user_pool" {
     client_id = var.facebook_client_id
     client_secret = var.facebook_client_secret
   }
+  cognito_user_pool_name = local.cognito_user_pool_name
 }
 
 module "cognito_identity_pool" {
@@ -31,7 +38,19 @@ module "cognito_identity_pool" {
   s3_files_bucket_arn = module.s3.files_bucket_arn
 }
 
-module "example_lambda" {
-  source = "./example-lambda"
-  lambda_bucket = var.lambda_bucket
+module "dynamodb" {
+  source = "./dynamodb"
+}
+
+module "lambda" {
+  source = "./lambda"
+  dynamodb_share_table_arn = module.dynamodb.share_table_arn 
+}
+
+module "api_gateway" {
+  source = "./api-gateway"
+  lambda_share_lambda_invoke_arn = module.lambda.share_lambda_invoke_arn
+  lambda_share_lambda_function_name = module.lambda.share_lambda_function_name
+  cognito_user_pool_name = local.cognito_user_pool_name
+  depends_on = [ module.lambda ]
 }

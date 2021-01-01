@@ -1,5 +1,5 @@
 resource "aws_cognito_user_pool" "user_pool" {
-  name                      = "mfsa_user_pool"
+  name                      = var.cognito_user_pool_name
   alias_attributes          = [ "email" ]
   auto_verified_attributes  = [ "email" ]
   mfa_configuration         = "OFF"
