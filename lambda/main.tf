@@ -48,7 +48,7 @@ EOF
 resource "aws_lambda_function" "share_lambda" {
   function_name = "mfsa-share"
   role          = aws_iam_role.share_lambda_role.arn
-  handler       = "exports.handler"
+  handler       = "share-lambda.handler"
   
   filename      = "${path.module}/files/share-lambda.zip"
   source_code_hash = data.archive_file.share_lambda_archive.output_base64sha256
