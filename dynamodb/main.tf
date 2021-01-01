@@ -9,8 +9,4 @@ resource "aws_dynamodb_table" "share_table" {
     name = "ResourceId"
     type = "S"
   }
-
-  ttl {
-    enabled = false
-  }
 }
