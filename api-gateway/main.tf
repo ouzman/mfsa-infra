@@ -34,7 +34,7 @@ resource "aws_api_gateway_integration" "root_integration" {
 resource "aws_api_gateway_resource" "file_resource" {
   rest_api_id = aws_api_gateway_rest_api.share_api.id
   parent_id   = aws_api_gateway_rest_api.share_api.root_resource_id
-  path_part   = "{resource}"
+  path_part   = "file-resource"
 }
 
 resource "aws_api_gateway_method" "file_resource_method" {
@@ -44,10 +44,6 @@ resource "aws_api_gateway_method" "file_resource_method" {
 
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.share_api_cognito_authorizer.id
-
-  request_parameters = {
-    "method.request.path.resource" = true
-  }
 }
 
 resource "aws_api_gateway_integration" "file_resource_integration" {
@@ -63,7 +59,7 @@ resource "aws_api_gateway_integration" "file_resource_integration" {
 resource "aws_api_gateway_resource" "file_resource_identity" {
   rest_api_id = aws_api_gateway_rest_api.share_api.id
   parent_id   = aws_api_gateway_resource.file_resource.id
-  path_part   = "identity"
+  path_part   = "{resource}/identity"
 }
 
 resource "aws_api_gateway_method" "file_resource_identity_method" {
