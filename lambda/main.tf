@@ -37,6 +37,8 @@ resource "aws_iam_role_policy" "share_lambda_policy" {
           "dynamodb:DeleteItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
+          "dynamodb:Scan",
+          "dynamodb:Query",
           "cognito-idp:ListUsers",
           "logs:CreateLogStream",
           "logs:CreateLogGroup",
@@ -44,6 +46,7 @@ resource "aws_iam_role_policy" "share_lambda_policy" {
       ],
       "Resource": [
           "${var.dynamodb_share_table_arn}",
+          "${var.dynamodb_share_table_arn}/index/*",
           "${var.cognito_user_pool_arn}",
           "arn:aws:logs:*:*:*"
       ],
