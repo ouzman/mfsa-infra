@@ -37,12 +37,14 @@ resource "aws_iam_role_policy" "share_lambda_policy" {
           "dynamodb:DeleteItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
+          "cognito-idp:ListUsers",
           "logs:CreateLogStream",
           "logs:CreateLogGroup",
           "logs:PutLogEvents"
       ],
       "Resource": [
           "arn:aws:dynamodb:eu-west-1:315952967095:table/mfsa-share",
+          "arn:aws:cognito-idp:eu-west-1:315952967095:userpool/mfsa-user-pool",
           "arn:aws:logs:*:*:*"
       ],
       "Effect": "Allow"
