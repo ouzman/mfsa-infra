@@ -27,11 +27,16 @@ const listCognitoUsers = () => {
 const getUserSubByEmail = async(email) => {
     const { users } = await listCognitoUsers();
     console.log({ users });
-    return users
+    const user = users
         .map(u => u.Attributes)
         .map(userAttr => userAttr.reduce((acc, it) => ({ ...acc, [it.Name]: it.Value }), {}))
-        .find(u => u.email.toLowerCase() === email.toLowerCase())
-        .sub;
+        .find(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        if (user) {
+            return user.sub
+        } else {
+            throw new Error("Email does not match with any user")
+        }
 }
 
 exports.handler = async(event, context) => {
@@ -53,11 +58,11 @@ exports.handler = async(event, context) => {
                 break;
             case 'PUT':
                 let identitySub = await getUserSubByEmail(event.body);
-                console.log({ identitySub })
+                console.log({ identitySub, resource: event.pathParameters.resource })
                 
                 body = await dynamo.update({
                     TableName: TABLE_NAME,
-                    Key: { ResourceId: event.pathParameters.resource },
+                    Key: { "ResourceId": event.pathParameters.resource },
                     UpdateExpression: 'ADD IdentityIds :identityId',
                     ExpressionAttributeValues: { ':identityId': dynamo.createSet([identitySub]) },
                 }).promise();
