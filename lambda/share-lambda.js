@@ -24,7 +24,7 @@ const listCognitoUsers = () => {
     });
 }
 
-const getUserSubByEmail = async (email) => {
+const getUserSubByEmail = async ({ email }) => {
     const { users } = await listCognitoUsers();
     console.log({ users });
     const user = users
@@ -48,6 +48,17 @@ const addIdentityToResource = async ({ resource, identity }) => {
     })
 }
 
+const listResourceIdsByIdentity = ({ identity }) => {
+    const params = {
+        TableName: TABLE_NAME,
+        FilterExpression: "contains (IdentityIds, :identity)",
+        ExpressionAttributeValues : { ':identity' : identity }
+    };
+    const resources = await dynamo.get(params);
+
+    console.log({ resources })
+}
+
 exports.handler = async (event, context) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
@@ -59,14 +70,10 @@ exports.handler = async (event, context) => {
 
     try {
         if (event.httpMethod === 'GET') {
-            const params = {
-                TableName: TABLE_NAME,
-                Key: { ResourceId: event.pathParameters.resource },
-            };
-            body = await dynamo.get(params).promise();
+            body = await listResourceIdsByIdentity({ identity: event.requestContext.authorizer.claims.sub })
         } else if (event.httpMethod == 'PUT') {
             const params = { 
-                identity: await getUserSubByEmail(event.body), 
+                identity: await getUserSubByEmail({ email: event.body }),
                 resource: event.pathParameters.resource 
             }
 
