@@ -67,23 +67,12 @@ resource "aws_iam_role_policy" "authenticated_role_policy" {
       "Sid": "",
       "Effect": "Allow",
       "Action": [
-          "apigateway:GET",
-          "apigateway:POST",
-          "apigateway:PUT",
-          "apigateway:PATCH",
-          "apigateway:DELETE",
           "s3:PutObject",
           "s3:GetObject",
-          "s3:DeleteObject",
-          "lambda:InvokeFunction",
-          "lambda:InvokeAsync",
-          "execute-api:Invoke"
+          "s3:DeleteObject"
       ],
       "Resource": [
-          "arn:aws:apigateway:eu-west-1::gxku7r49t9/*",
-          "arn:aws:s3:::mfsa-files/protected/$${cognito-identity.amazonaws.com:sub}/*",
-          "arn:aws:lambda:eu-west-1:315952967095:function:mfsa-share",
-          "arn:aws:execute-api:eu-west-1:315952967095:gxku7r49t9/*/*/*"
+          "arn:aws:s3:::mfsa-files/protected/$${cognito-identity.amazonaws.com:sub}/*"
       ]
     },
     {
