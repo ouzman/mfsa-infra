@@ -74,6 +74,14 @@ const generateResourceResponse = ({ resource }) => {
     }
 }
 
+const deleteResource = async ({ resource }) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Key: { "ResourceId": resource }
+    };
+    return await dynamo.delete(params).promise();
+}
+
 exports.handler = async (event, context) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
@@ -86,15 +94,15 @@ exports.handler = async (event, context) => {
     try {
         if (event.httpMethod === 'GET') {
             const list = await listResourceIdsByIdentity({ identity: event.requestContext.authorizer.claims.sub })
-            console.log(list)
             body = list.map(listItem => generateResourceResponse({ resource: listItem}))
+        } else if (event.httpMethod === 'DELETE') {
+            body = await deleteResource({ resource: event.pathParameters.resource })
         } else if (event.httpMethod == 'PUT') {
             const params = { 
                 identity: await getUserSubByEmail({ email: event.body }),
                 resource: event.pathParameters.resource,
                 owner: event.requestContext.authorizer.claims.sub
             }
-
             body = await addIdentityToResource(params);
         } else {
             throw new Error(`Unsupported method "${event.httpMethod}"`);
