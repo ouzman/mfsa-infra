@@ -98,10 +98,11 @@ exports.handler = async (event, context) => {
         } else if (event.httpMethod === 'DELETE') {
             body = await deleteResource({ resource: event.pathParameters.resource })
         } else if (event.httpMethod == 'PUT') {
+            const { email, owner } = JSON.parse(event.body);
             const params = { 
-                identity: await getUserSubByEmail({ email: event.body }),
+                identity: await getUserSubByEmail({ email }),
                 resource: event.pathParameters.resource,
-                owner: event.requestContext.authorizer.claims.sub
+                owner
             }
             body = await addIdentityToResource(params);
         } else {
