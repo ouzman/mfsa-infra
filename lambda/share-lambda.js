@@ -24,22 +24,31 @@ const listCognitoUsers = () => {
     });
 }
 
-const getUserSubByEmail = async(email) => {
+const getUserSubByEmail = async (email) => {
     const { users } = await listCognitoUsers();
     console.log({ users });
     const user = users
         .map(u => u.Attributes)
         .map(userAttr => userAttr.reduce((acc, it) => ({ ...acc, [it.Name]: it.Value }), {}))
         .find(u => u.email.toLowerCase() === email.toLowerCase());
-        
-        if (user) {
-            return user.sub
-        } else {
-            throw new Error("Email does not match with any user")
-        }
+
+    if (user) {
+        return user.sub
+    } else {
+        throw new Error("Email does not match with any user")
+    }
 }
 
-exports.handler = async(event, context) => {
+const addIdentityToResource = async ({ resource, identity }) => {
+    return dynamo.update({
+        TableName: TABLE_NAME,
+        Key: { "ResourceId": resource },
+        UpdateExpression: 'ADD IdentityIds :identityId',
+        ExpressionAttributeValues: { ':identityId': dynamo.createSet([identity]) },
+    })
+}
+
+exports.handler = async (event, context) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     let body;
@@ -49,27 +58,21 @@ exports.handler = async(event, context) => {
     };
 
     try {
-        switch (event.httpMethod) {
-            case 'GET':
-                body = await dynamo.get({
-                    TableName: TABLE_NAME,
-                    Key: { ResourceId: event.pathParameters.resource },
-                }).promise();
-                break;
-            case 'PUT':
-                let identitySub = await getUserSubByEmail(event.body);
-                console.log({ identitySub, resource: event.pathParameters.resource })
-                
-                body = await dynamo.update({
-                    TableName: TABLE_NAME,
-                    Key: { "ResourceId": event.pathParameters.resource },
-                    UpdateExpression: 'ADD IdentityIds :identityId',
-                    ExpressionAttributeValues: { ':identityId': dynamo.createSet([identitySub]) },
-                }).promise();
-                
-                break;
-            default:
-                throw new Error(`Unsupported method "${event.httpMethod}"`);
+        if (event.httpMethod === 'GET') {
+            const params = {
+                TableName: TABLE_NAME,
+                Key: { ResourceId: event.pathParameters.resource },
+            };
+            body = await dynamo.get(params).promise();
+        } else if (event.httpMethod == 'PUT') {
+            const params = { 
+                identity: await getUserSubByEmail(event.body), 
+                resource: event.pathParameters.resource 
+            }
+
+            body = await addIdentityToResource(params).promise();
+        } else {
+            throw new Error(`Unsupported method "${event.httpMethod}"`);
         }
     }
     catch (err) {
