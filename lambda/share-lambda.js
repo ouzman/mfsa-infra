@@ -39,24 +39,39 @@ const getUserSubByEmail = async ({ email }) => {
     }
 }
 
-const addIdentityToResource = async ({ resource, identity }) => {
+const addIdentityToResource = async ({ resource, identity, owner }) => {
     return dynamo.update({
         TableName: TABLE_NAME,
         Key: { "ResourceId": resource },
-        UpdateExpression: 'ADD IdentityIds :identityId',
-        ExpressionAttributeValues: { ':identityId': dynamo.createSet([identity]) },
-    })
+        UpdateExpression: 'SET #OWN=:ownerId ADD #IDS :identityId',
+        ExpressionAttributeNames: {
+            '#OWN': 'OwnerId',
+            '#IDS': 'IdentityIds'
+        },
+        ExpressionAttributeValues: {
+            ':ownerId': owner,
+            ':identityId': dynamo.createSet([identity])
+        },
+    }).promise();
 }
 
-const listResourceIdsByIdentity = ({ identity }) => {
+const listResourceIdsByIdentity = async ({ identity }) => {
     const params = {
         TableName: TABLE_NAME,
         FilterExpression: "contains (IdentityIds, :identity)",
         ExpressionAttributeValues : { ':identity' : identity }
     };
-    const resources = await dynamo.get(params);
+    const resources = await dynamo.scan(params).promise();
 
-    console.log({ resources })
+    return resources.Items;
+}
+
+const generateResourceResponse = ({ resource }) => {
+    return {
+        nativeKey: `protected/eu-west-1:${resource.OwnerId}/${resource.ResourceId}`,
+        key: resource.ResourceId,
+        owner: resource.OwnerId
+    }
 }
 
 exports.handler = async (event, context) => {
@@ -70,14 +85,17 @@ exports.handler = async (event, context) => {
 
     try {
         if (event.httpMethod === 'GET') {
-            body = await listResourceIdsByIdentity({ identity: event.requestContext.authorizer.claims.sub })
+            const list = await listResourceIdsByIdentity({ identity: event.requestContext.authorizer.claims.sub })
+            console.log(list)
+            body = list.map(listItem => generateResourceResponse({ resource: listItem}))
         } else if (event.httpMethod == 'PUT') {
             const params = { 
                 identity: await getUserSubByEmail({ email: event.body }),
-                resource: event.pathParameters.resource 
+                resource: event.pathParameters.resource,
+                owner: event.requestContext.authorizer.claims.sub
             }
 
-            body = await addIdentityToResource(params).promise();
+            body = await addIdentityToResource(params);
         } else {
             throw new Error(`Unsupported method "${event.httpMethod}"`);
         }
@@ -89,6 +107,7 @@ exports.handler = async (event, context) => {
     }
     finally {
         body = JSON.stringify(body);
+        console.log(body);
     }
 
     return {
